@@ -408,7 +408,7 @@ public void setVolumeCorrection(Float volumeCorrection) {
 				}
 			}
 			
-			if(Type.equalsIgnoreCase(pHMeter)) 
+			else if(Type.equalsIgnoreCase(pHMeter)) 
 			{
 				if(Polling)
 				{
