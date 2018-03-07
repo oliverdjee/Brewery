@@ -1,3 +1,43 @@
+/**
+ * This class is the main class for the brewery automation. All the devices
+ * used are created here and their ID has to be the same as the ID on the
+ * Arduino.
+ * 
+ * When devices are created, they can be put together as a Device Group, such
+ * as a group for the WaterTank, a group for the MashTun, a group for the Boil
+ * Kettle and a Group for the Fermenter.
+ * 
+ * Basic regulation of heaters and valves based on temperature and volumes,
+ * respectively are handled in the DeviceGroup. If that automation is not wanted,
+ * then, the user just dont put these devices into a DeviceGroup.
+ * 
+ * You can add to the device Group a Temperature Sensor, a Heater, In/Out Valves,
+ * Pumps, In/Out Flow Sensors, Motor (Stirrer, Mill), etc.
+ * 
+ * Once this is done, you can device.StartPolling(delay) your devices like Temperature Sensors
+ * or Flow sensors at a rate that you want, using device.setRequestDelay(millis). Or
+ * you can Start Polling using your customized GUI if you want. It is up to you, but
+ * do not forget to start polling the devices!
+ * 
+ * Then la Piece de Resistance! The Master Class that automates everything based on 
+ * a schedule decided by the user. This is optional is you want to retain full control.
+ * Or in the BreweryUI, you could add a button to cancel the Master Class automation 
+ * and regain full control over the system. I could add a class that overides the Master
+ * for Manual interventions.
+ * 
+ * The Master class works like the following:
+ * You add the devices to the Master (AddSlave()).
+ * You determine trigger values for device, and the actions taken when triggered
+ * Use the follwing Syntax:
+ *     (ListenedDevice,Trigger Value, [[TargetedDevice,SerialCommands],[...]]
+ * The trigger value can be setted using the SchedulePanel GUI,  you set a 
+ * trigger on the devices (value, time, etc).
+ * Time trigger values can be setted using a Timer by passing as a trigger value
+ * the timer object with preassigned values. All is left to do is start the timer
+ * by the Master when trigerred by the device itself.;
+  
+ */
+
 package Setup;
 
 import gnu.io.UnsupportedCommOperationException;
