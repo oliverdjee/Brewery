@@ -1,7 +1,11 @@
 /**
  * This class is the main class for the brewery automation. All the devices
  * used are created here and their ID has to be the same as the ID on the
- * Arduino.
+ * Arduino. The Arduino is set up here as well. You have to give your Arduino 
+ * a Name so it will search all the connected Serial Ports and send the name
+ * of the Arduino. Therefore, the Arduino has to listen on the port and when 
+ * "Recon" is heard (See SerialSend Class Documentation), it sends back his 
+ * name. If both matches, the port is set up and ready.
  * 
  * When devices are created, they can be put together as a Device Group, such
  * as a group for the WaterTank, a group for the MashTun, a group for the Boil
@@ -25,16 +29,23 @@
  * and regain full control over the system. I could add a class that overides the Master
  * for Manual interventions.
  * 
+ * 
+ * **********************************************************************
+ * SUBJECT TO CHANGES WHILE BEING IMPLEMETED FOR VERSATILITY*************
+ * **********************************************************************
  * The Master class works like the following:
  * You add the devices to the Master (AddSlave()).
  * You determine trigger values for device, and the actions taken when triggered
- * Use the follwing Syntax:
- *     (ListenedDevice,Trigger Value, [[TargetedDevice,SerialCommands],[...]]
- * The trigger value can be setted using the SchedulePanel GUI,  you set a 
+ * Use the following Syntax:
+ *     AddReadingTriggeredAction(ListenedDevice,Trigger Value, [[TargetedDevice,SerialCommands],[...]]
+ * The trigger value can be set using the SchedulePanel GUI,  you set a 
  * trigger on the devices (value, time, etc).
- * Time trigger values can be setted using a Timer by passing as a trigger value
+ * Time trigger values can be set using a Timer by passing as a trigger value
  * the timer object with preassigned values. All is left to do is start the timer
- * by the Master when trigerred by the device itself.;
+ * by the Master when triggered by the device itself.
+ * For timers, use the following syntax:
+ * 	    AddTimerTriggeredAction(ListenedDevice,Timer, [[TargetedDevice,SerialCommands],[...]]
+ 
   
  */
 
