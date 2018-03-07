@@ -1,5 +1,15 @@
 /**
  * I have to decide of how this is going to handle all the devices
+ * I want to add devices to this class and then listen to any readings
+ * of the devices. I add a trigger for a device, and an action to perform
+ * when it is triggered by the reading event on the device.
+ * 
+ * I would have to build a an interface in which it would be possible to 
+ * link a device to an action (DeviceAction Class maybe) and to assign a trigger
+ * to a device.
+ * 
+ * These would be designed in the DeviceManager class, to make it exactly
+ * fit the brewery needs.
  */
 
 
@@ -7,7 +17,11 @@ package Schedule;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
 import javax.swing.event.EventListenerList;
+
+import Hardware.Device;
 
 public class Master {
 	
@@ -47,6 +61,8 @@ public class Master {
 	final private  double[] UtilizationRange	= {0.0, 40};
 	final private  double[] AlphaAcidTheta 	= {};
 	
+	private ArrayList<Device>	Slaves;
+	
 	public Master()
 	{
 		InitialWaterVolumelistenerList 	= new EventListenerList();
@@ -56,6 +72,7 @@ public class Master {
 		SpargeVolumelistenerList 		= new EventListenerList();
 		MashSteplistenerList 			= new EventListenerList();
 		HopAdditionSteplistenerList 	= new EventListenerList();
+		Slaves 							= new ArrayList<Device>();
 	}
 
 /*********************Private Functions*************************/	
@@ -206,6 +223,17 @@ public class Master {
 				((ActionListener)listeners[i+1]).actionPerformed(evt);
 			}
 		}
+	}
+	
+	public void AddDevice(Device device)
+	{
+		device.addStateChangeEventListener(new SlaveListener());
+		Slaves.add(device);
+	}
+	
+	public void RemoveDevice(Device device)
+	{
+		Slaves.remove(device);
 	}
 
 	public double[] getAlphaAcidTheta() {
@@ -362,5 +390,25 @@ public class Master {
 	
 	public void setMashVolume(double mashVolume) {
 		MashVolume = mashVolume;
+	}
+	
+	/**
+	 * PRIVATE CLASSES
+	 */
+	
+	private class SlaveListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent evt) 
+		{
+			Device device = (Device)evt.getSource();
+			int EventType = evt.getID();
+		
+			if(EventType == Device.READING_EVENT)
+			{
+				
+				double reading = device.getReading();
+			}
+		}
 	}
 }
