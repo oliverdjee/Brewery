@@ -20,9 +20,9 @@ import Graphs.MyTempGraph;
 
 public class Device extends JButton
 {
-	/**
-	 * 
-	 */
+	public static final int STATE_EVENT = 1;
+	public static final int READING_EVENT = 0;
+	
 	public static final String pHMeter = "pHMeter";
 	public static final String TemperatureSensor = "TemperatureSensor";
 	public static final String FlowSensor = "FlowSensor";
@@ -41,10 +41,10 @@ public class Device extends JButton
 	public static final String[] DIGITAL = new String[]{"Valve","Stir","Stirrer","Heater","Motor","Mill",
 														  "Pump","Laser"};
 	
-	public static Color OPEN_COLOR = MyTempGraph.myGreen;
-	public static Color CLOSED_COLOR = MyTempGraph.myRed;
-	public static Color WAIT_COLOR = Color.YELLOW;
-	public static Color BACKGROUND_COLOR = Color.WHITE;
+	public static final Color OPEN_COLOR = MyTempGraph.myGreen;
+	public static final Color CLOSED_COLOR = MyTempGraph.myRed;
+	public static final Color WAIT_COLOR = Color.YELLOW;
+	public static final Color BACKGROUND_COLOR = Color.WHITE;
 	
 	private boolean Display;
 	private EventListenerList		StateChangelistenerList;
@@ -195,7 +195,7 @@ public class Device extends JButton
 		{
 			Open = state;
 			setBorder(new MatteBorder(1, 1, 7, 1, WAIT_COLOR));
-			Communicator.SendString(Name+String.valueOf(state), Communicator.GetSerialPortMap().get(ArduinoController));
+			Communicator.QueueCommand(Name+String.valueOf(state), Communicator.GetSerialPortMap().get(ArduinoController));
 		}
 	}
 
@@ -203,7 +203,7 @@ public class Device extends JButton
 	public void RequestReading()
 	{
 		setBorder(new MatteBorder(1, 1, 7, 1, WAIT_COLOR));
-		Communicator.SendString(Name+"R", Communicator.GetSerialPortMap().get(ArduinoController));
+		Communicator.QueueCommand(Name+"R", Communicator.GetSerialPortMap().get(ArduinoController));
 	}
 
 	
@@ -281,8 +281,6 @@ public void setVolumeCorrection(Float volumeCorrection) {
 
 	private class SerialEventListener implements ActionListener
 	{
-		private final int STATE_EVENT = 1;
-		private final int READING_EVENT = 0;
 		@Override
 		public void actionPerformed(ActionEvent e) 
 		{
@@ -305,7 +303,7 @@ public void setVolumeCorrection(Float volumeCorrection) {
 								setBorder(new MatteBorder(1, 1, 7, 1, OPEN_COLOR));
 							}
 							
-							ActionEvent Evt = new ActionEvent(getDevice(), this.STATE_EVENT, Command[1]);
+							ActionEvent Evt = new ActionEvent(getDevice(), Device.STATE_EVENT, Command[1]);
 							fireStateChangeEvent(Evt);
 							return;
 						}
@@ -325,7 +323,7 @@ public void setVolumeCorrection(Float volumeCorrection) {
 								}
 								String read = String.valueOf(Reading);
 								if(Display){
-									setText(read);
+									setText(String.format("%.1f",read));
 									setBorder(new MatteBorder(1, 1, 7, 1, OPEN_COLOR));
 								}
 								//Update Graph dataSeries
@@ -336,7 +334,7 @@ public void setVolumeCorrection(Float volumeCorrection) {
 									System.out.println("Cannot Update Graph: "+ Reading);
 								}
 								
-								ActionEvent Evt = new ActionEvent(getDevice(), this.READING_EVENT, read);
+								ActionEvent Evt = new ActionEvent(getDevice(), Device.READING_EVENT, read);
 								fireStateChangeEvent(Evt);
 								return;
 							}

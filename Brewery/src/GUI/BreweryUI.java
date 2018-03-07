@@ -16,9 +16,10 @@ import javax.swing.border.EmptyBorder;
 
 import Hardware.Device;
 import Hardware.DeviceAction;
+import Hardware.DeviceGroup;
 import Hops.HopNomogram;
 import Schedule.SchedulePanel;
-import Schedule.ScheduleValues;
+import Schedule.Master;
 import Setup.DeviceManager;
 import TouchScreenPanel.SetterDialog;
 import gnu.io.UnsupportedCommOperationException;
@@ -49,7 +50,7 @@ import Graphs.MyTempGraph;
 
 import javax.swing.JProgressBar;
 
-public class GUI_V3 extends JFrame {
+public class BreweryUI extends JFrame {
 	
 	/**
 	 * 
@@ -107,7 +108,7 @@ public class GUI_V3 extends JFrame {
 	
 	private Device 			pHMeter;
 	
-	private ScheduleValues	ScheduleVal;
+	private Master	ScheduleVal;
 	//Cooling/Heating Icons
 	private	 JButton Cool;
 	private	 JLabel KettleHeatIcon;
@@ -155,7 +156,7 @@ public class GUI_V3 extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					GUI_V3 frame = new GUI_V3();
+					BreweryUI frame = new BreweryUI();
 					frame.setVisible(true);
 				}
 				
@@ -175,7 +176,7 @@ public class GUI_V3 extends JFrame {
 	 * @throws IOException 
 	 */
 	
-	public GUI_V3() throws UnsupportedCommOperationException, InterruptedException, IOException {
+	public BreweryUI() throws UnsupportedCommOperationException, InterruptedException, IOException {
 		
 		System.out.println("Initiating Brewery Operations");
 		Brewery = new DeviceManager();
@@ -275,7 +276,7 @@ public class GUI_V3 extends JFrame {
 		Recirculate = new JButton("");
 		Recirculate.setBounds(425, 350, 32, 32);
 		MainPanel.add(Recirculate);
-		Recirculate.setIcon(new ImageIcon(GUI_V3.class.getResource("/GUI/images/recirculating.png")));
+		Recirculate.setIcon(new ImageIcon(BreweryUI.class.getResource("/GUI/images/recirculating.png")));
 		Recirculate.setFont(new Font("Tahoma", Font.BOLD, 14));
 		Recirculate.setBackground(Color.WHITE);
 		Recirculate.addActionListener(new ActionListener(){
@@ -409,8 +410,7 @@ public class GUI_V3 extends JFrame {
 		
 		//Variable for the Temperature Setter Panel (showConfirmDialog)
 		SetterPanel = new SetterDialog();
-		ScheduleVal = new ScheduleValues();
-		ScheduleFrame = new SchedulePanel(ScheduleVal);
+		ScheduleFrame = new SchedulePanel(Brewery.getMaster());
 		ScheduleFrame.setPreferredSize(new Dimension(400,800));
 		ScheduleFrame.pack();
 		ScheduleFrame.setVisible(false);
@@ -560,36 +560,19 @@ public class GUI_V3 extends JFrame {
 		WaterTankTarget_V.setColumns(10);
 		WaterTankTarget_V.addMouseListener(new Target_V());
 		
-		WaterTankActual_V = new JTextField("-");
+		WaterTankActual_V = new JTextField("0.0");
 		WaterTankActual_V.setEditable(false);
 		WaterTankActual_V.setHorizontalAlignment(SwingConstants.CENTER);
 		WaterTankActual_V.setForeground(new Color(0, 0, 205));
 		WaterTankActual_V.setFont(new Font("Tahoma", Font.BOLD, 14));
 		WaterTankActual_V.setColumns(10);
 		WaterTankActual_V.setBounds(92, 143, 62, 28);
-		WaterTankActual_V.addMouseListener(new MouseListener(){
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				Brewery.getGroup("WaterTank").getDevice("04").StartPolling(Device.PollingDelay);
-				Brewery.getGroup("WaterTank").getDevice("05").StartPolling(Device.PollingDelay);
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {}
-			@Override
-			public void mouseExited(MouseEvent e) {}
-			@Override
-			public void mousePressed(MouseEvent e) {}
-			@Override
-			public void mouseReleased(MouseEvent e) {}
-			
-		});
 		WaterTankPanel.add(WaterTankActual_V);
 		Brewery.getGroup("WaterTank").addGroupStateChangeEventListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-					if(arg0.getID() == 2)
+					if(arg0.getID() == DeviceGroup.FLOW_EVENT)
 					{
 						WaterTankActual_V.setText(arg0.getActionCommand());
 					}
@@ -756,37 +739,18 @@ public class GUI_V3 extends JFrame {
 		
 		MashTunActual_V = new JTextField();
 		MashTunActual_V.setEditable(false);
-		MashTunActual_V.setText("-");
+		MashTunActual_V.setText("0.0");
 		MashTunActual_V.setBounds(96, 143, 61, 28);
 		MashTunPanel.add(MashTunActual_V);
 		MashTunActual_V.setHorizontalAlignment(SwingConstants.CENTER);
 		MashTunActual_V.setForeground(Color.BLACK);
 		MashTunActual_V.setFont(new Font("Tahoma", Font.BOLD, 14));
 		MashTunActual_V.setColumns(10);
-		MashTunActual_V.addMouseListener(new MouseListener(){
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				Brewery.getGroup("MashTun").getDevice("06").StartPolling(Device.PollingDelay);
-				Brewery.getGroup("WaterTank").getDevice("05").StartPolling(Device.PollingDelay);
-				Brewery.getGroup("WaterTank").getDevice("04").StopPolling();
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {}
-			@Override
-			public void mousePressed(MouseEvent e) {}
-			@Override
-			public void mouseReleased(MouseEvent e) {}
-			
-		});
 		Brewery.getGroup("MashTun").addGroupStateChangeEventListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-					if(arg0.getID() == 2)
+					if(arg0.getID() == DeviceGroup.FLOW_EVENT)
 					{
 						MashTunActual_V.setText(arg0.getActionCommand());
 					}
@@ -912,7 +876,7 @@ public class GUI_V3 extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-					if(arg0.getID() == 2)
+					if(arg0.getID() == DeviceGroup.FLOW_EVENT)
 					{
 						BoilKettleActual_V.setText(arg0.getActionCommand());
 					}

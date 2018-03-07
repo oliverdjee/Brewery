@@ -9,11 +9,13 @@ import Communication.SerialSend;
 import Hardware.Device;
 import Hardware.DeviceAction;
 import Hardware.DeviceGroup;
+import Schedule.Master;
 
 public class DeviceManager{
 
 	private ArrayList<DeviceGroup>	Groups		= new ArrayList<DeviceGroup>();
 	private ArrayList<DeviceAction> Actions		= new ArrayList<DeviceAction>();
+	private Master			Schedule	= new Master();
 	private SerialSend Arduino;
 	ArrayList<String> Controllers;
 	public static final double StartTime = System.currentTimeMillis()/1000.0;
@@ -43,13 +45,15 @@ public class DeviceManager{
 		
 		Device WaterTankFlowSensorIn = new Device("04", Device.FlowSensor, ArduinoMega);
 		WaterTankFlowSensorIn.setVisible(false);
-		WaterTankFlowSensorIn.setVolumeCorrection(0.00386);
+		WaterTankFlowSensorIn.setVolumeCorrection(1.05);
+		WaterTankFlowSensorIn.setRequestDelay(1000);
 		WaterTank.AddDevice(WaterTankFlowSensorIn);
 		WaterTank.AddFlowEntryDevice(WaterTankFlowSensorIn);
 		
 		Device WaterTankFlowSensorOut = new Device("05", Device.FlowSensor, ArduinoMega);
 		WaterTankFlowSensorOut.setVisible(false);
-		WaterTankFlowSensorOut.setVolumeCorrection(0.00386);
+		WaterTankFlowSensorOut.setVolumeCorrection(0.6);
+		WaterTankFlowSensorOut.setRequestDelay(2000);
 		WaterTank.AddDevice(WaterTankFlowSensorOut);
 		WaterTank.AddFlowExitDevice(WaterTankFlowSensorOut);
 		
@@ -65,6 +69,8 @@ public class DeviceManager{
 		for(Device device:WaterTank.getDevices()){
 			device.Init(Arduino);
 		}
+		WaterTankFlowSensorIn.StartPolling(WaterTankFlowSensorIn.getRequestDelay());
+		WaterTankFlowSensorOut.StartPolling(WaterTankFlowSensorOut.getRequestDelay());
 		
 		//SETTING UP THE HERMS
 		
@@ -102,7 +108,8 @@ public class DeviceManager{
 		
 		Device MashTunFlowSensorOut = new Device("06",Device.FlowSensor, ArduinoMega);
 		MashTunFlowSensorOut.setVisible(false);
-		MashTunFlowSensorOut.setVolumeCorrection(0.00386);
+		MashTunFlowSensorOut.setVolumeCorrection(1.0);
+		MashTunFlowSensorOut.setRequestDelay(2000);
 		MashTun.AddDevice(MashTunFlowSensorOut);
 		MashTun.AddFlowExitDevice(MashTunFlowSensorOut);
 		
@@ -125,7 +132,7 @@ public class DeviceManager{
 		for(Device device:MashTun.getDevices()){
 			device.Init(Arduino);
 		}
-		
+		MashTunFlowSensorOut.StartPolling(MashTunFlowSensorOut.getRequestDelay());
 		
 		//SETTING BOILKETTLE
 		
@@ -283,9 +290,19 @@ public class DeviceManager{
 		Actions = actions;
 	}
 
+	public Master getMaster() {
+		return Schedule;
+	}
+
+	public void setMaster(Master schedule) {
+		Schedule = schedule;
+	}
+	
 	public static void main(String[] args) {
 
 	}
+
+	
 
 }
 

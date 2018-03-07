@@ -40,7 +40,7 @@ private ArrayList<String>					ArduinoList								= null;
 	final static int 							SPACE_ASCII 							= 32; // space " "
 	final static int 							DASH_ASCII 								= 45; // dash "-" for new message
 	final static int 							NEW_LINE_ASCII 							= 10; // line feed "\n" for end of message
-	
+	private Object								sync;
 	//Recording any issues with this String variable
 	private String 								logText 								= null;
 	
@@ -54,6 +54,7 @@ private ArrayList<String>					ArduinoList								= null;
 		portMap 				= new HashMap<String,CommPortIdentifier>();
 		ReceivedMap 			= new HashMap<SerialPort,String>();
 		logText 				= "";
+		sync = new Object();
 	}
 	
 	public boolean InitSerialComm() throws UnsupportedCommOperationException, InterruptedException
@@ -113,7 +114,7 @@ private ArrayList<String>					ArduinoList								= null;
 				logText = "Looking for port Info ...\n";
 				logText = "Attempt " + String.valueOf(Attempt)+ 
 						" of " +  String.valueOf(maxAttempt)+ "...\n";
-				SendString("Recon", serialPort);
+				QueueCommand("Recon", serialPort);
 				long time = System.currentTimeMillis();
 				boolean out = false;
 				while(ReceivedMap.get(serialPort).isEmpty() == true && out == false)
@@ -132,7 +133,7 @@ private ArrayList<String>					ArduinoList								= null;
 					String PortId = ReceivedMap.get(serialPort);
 					SerialPortMap.put(PortId,serialPort);
 					Thread.sleep(500);
-					SendString("connect", serialPort);
+					QueueCommand("connect", serialPort);
 					logText = "Ready for communications with "+ PortId + "\n";
 					System.out.println(logText);
 					fRet = true;
@@ -153,20 +154,24 @@ private ArrayList<String>					ArduinoList								= null;
 		return fRet;
 	}
 	
-	public boolean SendString(String commandToSend, SerialPort serialPort)
+	public boolean QueueCommand(String commandToSend, SerialPort serialPort)
 	{
-		boolean fRet = false;
-		byte[] byteS2 = commandToSend.getBytes();
-		for(int x = 0; x<byteS2.length;x++)
+		synchronized(sync)
 		{
-			WriteData((char)byteS2[x], serialPort);
-			if(x==byteS2.length-1)
+			boolean fRet = false;
+			byte[] byteS2 = commandToSend.getBytes();
+			for(int x = 0; x<byteS2.length;x++)
 			{
-				EndOfData(serialPort);
+				WriteData((char)byteS2[x], serialPort);
+				if(x==byteS2.length-1)
+				{
+					EndOfData(serialPort);
+				}
 			}
+			fRet = true;
+			return fRet;
 		}
-		fRet = true;
-		return fRet;
+		
 	}
 	
 	
@@ -222,7 +227,7 @@ private ArrayList<String>					ArduinoList								= null;
 	{
 		try
 		{
-			SendString("disconnect", serialPort);
+			QueueCommand("disconnect", serialPort);
 			Thread.sleep(500);
 			String name = serialPort.getName();
 			serialPort.removeEventListener();
@@ -339,7 +344,7 @@ private ArrayList<String>					ArduinoList								= null;
 		list.add("Uno");
 		SerialSend test = new SerialSend(list);
 		test.InitSerialComm();
-		test.SendString("WaterTankFlowSensorMiddletrue",test.GetSerialPortMap().get("Uno"));
+		test.QueueCommand("WaterTankFlowSensorMiddletrue",test.GetSerialPortMap().get("Uno"));
 		String s = "";
 		while(s.equals("disconnect") == false)
 		{

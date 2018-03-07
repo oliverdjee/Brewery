@@ -1,10 +1,15 @@
+/**
+ * I have to decide of how this is going to handle all the devices
+ */
+
+
 package Schedule;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.event.EventListenerList;
 
-public class ScheduleValues {
+public class Master {
 	
 	private EventListenerList		InitialWaterVolumelistenerList;
 	private EventListenerList		MashVolumelistenerList;
@@ -14,10 +19,10 @@ public class ScheduleValues {
 	private EventListenerList		MashSteplistenerList;
 	private EventListenerList		HopAdditionSteplistenerList;
 	
-	private double InitialWaterVolume = 17.0;
-	private double MashVolume 		= 9.0;
-	private double WaterStrikeTemp 	= 72.0;
-	private double SpargeTemp 		= 75.0;
+	private double InitialWaterVolume 	= 19.0;
+	private double MashVolume 			= 9.0;
+	private double WaterStrikeTemp 		= 73.0;
+	private double SpargeTemp 			= 80.0;
 	private double SpargeVolume 		= InitialWaterVolume - MashVolume;
 	
 	private double Mash_Step1_Time 	= 60;
@@ -42,7 +47,7 @@ public class ScheduleValues {
 	final private  double[] UtilizationRange	= {0.0, 40};
 	final private  double[] AlphaAcidTheta 	= {};
 	
-	public ScheduleValues()
+	public Master()
 	{
 		InitialWaterVolumelistenerList 	= new EventListenerList();
 		MashVolumelistenerList 			= new EventListenerList();

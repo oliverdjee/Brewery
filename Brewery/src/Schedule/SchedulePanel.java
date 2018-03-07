@@ -57,13 +57,13 @@ public class SchedulePanel extends JFrame
 	private JButton button;
 	private JButton button_1;
 	private JButton Set_HopSchedule;
-	private ScheduleValues vals;
+	private Master vals;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ScheduleValues vals = new ScheduleValues();
+					Master vals = new Master();
 					SchedulePanel frame = new SchedulePanel(vals);
 					frame.setPreferredSize(new Dimension(400,800));
 					frame.pack();
@@ -75,7 +75,7 @@ public class SchedulePanel extends JFrame
 		});
 	}
 	
-	public SchedulePanel(ScheduleValues _vals) {
+	public SchedulePanel(Master _vals) {
 		vals = _vals;
 		setAlwaysOnTop(true);
 		setBackground(Color.WHITE);

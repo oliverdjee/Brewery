@@ -10,14 +10,20 @@ import java.util.HashMap;
 import javax.swing.event.EventListenerList;
 
 public class DeviceGroup {
+	public static final double		DEFAULT_MAX_VOLUME = 20.0;
+	public static final double		DEFAULT_DEAD_VOLUME = 20.0;
+	public static final int			TEMPERATURE_EVENT = 0;
+	public static final int			OPENCLOSE_EVENT = 1;
+	public static final int			FLOW_EVENT = 2;
 	private String 					Name;
 	
 	private HashMap<String, Double>	Actual_T_Map;
 	private float 					Actual_V;
 	
-	private Object[] 					Target_T;
-	private Object[] 					Target_V;
-	
+	private Object[] 				Target_T;
+	private Object[] 				Target_V;
+	private double					MaxVolume;
+	private double					DeadVolume;
 	private ArrayList<Device>		Devices;
 	
 	private EventListenerList		DeviceStateChangelistenerList = null;
@@ -35,6 +41,8 @@ public class DeviceGroup {
 	public DeviceGroup(String name)
 	{
 		Name 				= name;
+		MaxVolume = DEFAULT_MAX_VOLUME;
+		DeadVolume = DEFAULT_DEAD_VOLUME;
 		Target_V = new Object[3];
 		Target_T = new Object[3];
 		Actual_V 			= (float) 0;
@@ -211,6 +219,22 @@ public class DeviceGroup {
 		Actual_V = volume;
 	}
 	
+	public double getMaxVolume() {
+		return MaxVolume;
+	}
+
+	public void setMaxVolume(double maxVolume) {
+		MaxVolume = maxVolume;
+	}
+	
+	public double getDeadVolume() {
+		return DeadVolume;
+	}
+	
+	public void setDeadVolume(double deadVolume) {
+		DeadVolume = deadVolume;
+	}
+	
 /**********************Private Functions*************************/
 	
 	private class DeviceListener implements ActionListener
@@ -223,9 +247,9 @@ public class DeviceGroup {
 		
 			if(EventType == 1)
 			{
-				evt = new ActionEvent(device, 1, Name);
+				evt = new ActionEvent(device, DeviceGroup.OPENCLOSE_EVENT, Name);
 			}
-			else if(EventType == 0 && FlowEntryDevices.contains(device))
+			else if(EventType == Device.READING_EVENT && FlowEntryDevices.contains(device))
 			{
 				
 				double reading = device.getReading();
@@ -241,9 +265,9 @@ public class DeviceGroup {
 						}
 					}
 				}
-				evt = new ActionEvent(this, 2, String.valueOf(Actual_V));
+				evt = new ActionEvent(this, DeviceGroup.FLOW_EVENT, String.format("%.1f",Actual_V));
 			}
-			else if(EventType == 0 && FlowExitDevices.contains(device))
+			else if(EventType == Device.READING_EVENT && FlowExitDevices.contains(device))
 			{
 				double reading = device.getReading();
 				Actual_V -=  reading;
@@ -259,9 +283,9 @@ public class DeviceGroup {
 						}
 					}
 				}
-				evt = new ActionEvent(this, 2, String.valueOf(Actual_V));
+				evt = new ActionEvent(this, DeviceGroup.FLOW_EVENT, String.format("%.1f",Actual_V));
 			}
-			else if(EventType == 0 && TemperatureDevices.contains(device))
+			else if(EventType == Device.READING_EVENT && TemperatureDevices.contains(device))
 			{
 				double reading = device.getReading();
 				Actual_T_Map.put(device.getName(), reading);
@@ -281,7 +305,7 @@ public class DeviceGroup {
 						
 					}
 				}
-				evt = new ActionEvent(this, 0, String.valueOf(reading));
+				evt = new ActionEvent(this, DeviceGroup.TEMPERATURE_EVENT, String.format("%.1f",reading));
 				
 			}
 			fireGroupStateChangeEvent(evt);
