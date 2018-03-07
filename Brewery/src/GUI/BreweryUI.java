@@ -563,7 +563,7 @@ public class BreweryUI extends JFrame {
 		WaterTankActual_V = new JTextField("0.0");
 		WaterTankActual_V.setEditable(false);
 		WaterTankActual_V.setHorizontalAlignment(SwingConstants.CENTER);
-		WaterTankActual_V.setForeground(new Color(0, 0, 205));
+		WaterTankActual_V.setForeground(Color.BLACK);
 		WaterTankActual_V.setFont(new Font("Tahoma", Font.BOLD, 14));
 		WaterTankActual_V.setColumns(10);
 		WaterTankActual_V.setBounds(92, 143, 62, 28);
@@ -737,9 +737,8 @@ public class BreweryUI extends JFrame {
 		MashTunActual_T.getGraph().getDataset().addSeries(HERMSActual_T.getGraph().getData());
 		MashTunPanel.add(MashTunActual_T);
 		
-		MashTunActual_V = new JTextField();
+		MashTunActual_V = new JTextField("0.0");
 		MashTunActual_V.setEditable(false);
-		MashTunActual_V.setText("0.0");
 		MashTunActual_V.setBounds(96, 143, 61, 28);
 		MashTunPanel.add(MashTunActual_V);
 		MashTunActual_V.setHorizontalAlignment(SwingConstants.CENTER);
@@ -863,9 +862,8 @@ public class BreweryUI extends JFrame {
 		BoilKettle_Level.setForeground(Color.BLACK);
 		BoilKettle_Level.setFont(new Font("Tahoma", Font.BOLD, 12));
 		
-		BoilKettleActual_V = new JTextField();
+		BoilKettleActual_V = new JTextField("0.0");
 		BoilKettleActual_V.setEditable(false);
-		BoilKettleActual_V.setText("-");
 		BoilKettleActual_V.setBounds(88, 100, 62, 28);
 		BoilKettlePanel.add(BoilKettleActual_V);
 		BoilKettleActual_V.setHorizontalAlignment(SwingConstants.CENTER);
@@ -945,9 +943,8 @@ public class BreweryUI extends JFrame {
 		Fermentor_Level.setForeground(Color.BLACK);
 		Fermentor_Level.setFont(new Font("Tahoma", Font.BOLD, 12));
 		
-		FermentorActual_V = new JTextField();
+		FermentorActual_V = new JTextField("0.0");
 		FermentorActual_V.setEditable(false);
-		FermentorActual_V.setText("-");
 		FermentorActual_V.setBounds(120, 70, 62, 28);
 		FermentorPanel.add(FermentorActual_V);
 		FermentorActual_V.setHorizontalAlignment(SwingConstants.CENTER);
