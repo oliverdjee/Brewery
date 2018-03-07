@@ -1,3 +1,14 @@
+/**
+ * We send through the serial port, "Recon". The arduino listens for that, 
+ * and answer with his name. If the name is found in the "ArduinoList", which
+ * is an array list of Strings, then the port is setted up for communications
+ * and is ready.
+ * 
+ *  It is crucial that the arduino's answer to "Recon" matches the name you
+ *  give to the arduino when setting up the DeviceManager Class for your own
+ *  customized brewery.
+ */
+
 package Communication;
 
 import gnu.io.*;
