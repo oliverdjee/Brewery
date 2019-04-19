@@ -152,7 +152,7 @@ public class HopNomogram extends JFrame{
 		GraphArea.setLayout(null);
 		
 		HopIcon = new JLabel("");
-		HopIcon.setIcon(new ImageIcon(HopNomogram.class.getResource("/hops.png")));
+		HopIcon.setIcon(new ImageIcon(HopNomogram.class.getResource("images/Hops.png")));
 		HopIcon.setBounds(new Rectangle(15, 16, 49, 50));
 		GraphArea.add(HopIcon);
 		

@@ -982,7 +982,7 @@ public class BreweryUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					HopNomogram Nomogram = new HopNomogram();
+					Nomogram = new HopNomogram();
 					Nomogram.setVisible(false);
 					Nomogram.pack();
 				}

@@ -81,7 +81,7 @@ public class Device extends JButton
 	
 	private void InitDeviceButton() {
 		try{
-			setIcon(new ImageIcon(this.getClass().getResource("/"+Type+"Icon.png")));
+			setIcon(new ImageIcon(this.getClass().getResource("images/"+Type+"Icon.png")));
 		}catch(Exception Err){setText("N/A");}
 		setEnabled(Connected.booleanValue());
 		setVisible(true);
@@ -106,7 +106,7 @@ public class Device extends JButton
 											"Temperature (Celcius)"
 											);
 			GraphButton = new JButton();
-			GraphButton.setIcon(new ImageIcon(this.getClass().getResource("/Graph_Icon.png")));
+			GraphButton.setIcon(new ImageIcon(this.getClass().getResource("images/Graph_Icon.png")));
 			GraphButton.addActionListener(new GraphButtonPressedListener());
 			GraphButton.setName(Name+"_Graph");
 			GraphButton.setSize(new Dimension(37,37));
@@ -120,7 +120,7 @@ public class Device extends JButton
 											"pH"
 											);
 			GraphButton = new JButton();
-			GraphButton.setIcon(new ImageIcon(this.getClass().getResource("/Graph_Icon.png")));
+			GraphButton.setIcon(new ImageIcon(this.getClass().getResource("images/Graph_Icon.png")));
 			GraphButton.setName(Name+"_Graph");
 			GraphButton.setSize(new Dimension(37,37));
 			GraphButton.setBackground(BACKGROUND_COLOR);
@@ -134,7 +134,7 @@ public class Device extends JButton
 											"Volume (L)"
 											);
 			GraphButton = new JButton();
-			GraphButton.setIcon(new ImageIcon(this.getClass().getResource("/Graph_Icon.png")));
+			GraphButton.setIcon(new ImageIcon(this.getClass().getResource("images/Graph_Icon.png")));
 			GraphButton.setName(Name+"_Graph");
 			GraphButton.setSize(new Dimension(37,37));
 			GraphButton.setBackground(BACKGROUND_COLOR);
